@@ -40,3 +40,8 @@ def register(request):
         login(request, user)
         return redirect('home')
     return render(request, 'base/login_register.html', context)
+
+
+def logoutUser(request):
+    logout(request)
+    return redirect ('home')
