@@ -29,6 +29,13 @@
             <span>👍 {{ post.likes.count }} Likes</span>
             <span>💬 {{ post.comments.count }} Comments</span>
           </div>
+          <div>
+            <form method="POST" action="{% url 'comment' post.id %}">
+            {% csrf_token %}
+            <input type="text" name="content" placeholder="write a comment" >
+            <input type="submit">
+            </form>
+         </div>
         </div>
       {% endfor %}
     {% else %}

@@ -3,13 +3,13 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
-from .models import Post
+from .models import Post, Comment
 # Create your views here.
 
 
 @login_required(login_url='login')
 def home(request):
-    
+
     posts = Post.objects.all().order_by('-created_at')
     context = {'posts': posts}
     return render(request, 'base/home.html', context)
@@ -70,6 +70,16 @@ def createPost(request):
             return redirect('home')
 
     return render(request, 'base/create_post.html')
+
+
+def comment(request, pk):
+    post = Post.objects.get(id=pk)
+    if request.method == 'POST':
+        content = request.POST.get('content')
+        if content.strip():
+            Comment.objects.create(
+                post=post, author=request.user.student_profile, content=content)
+        return redirect('home')
 
 
 def logoutUser(request):
