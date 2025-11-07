@@ -1,2 +1,40 @@
-<a href="{% url 'logout' %}">logout</a>
-<h1>Wellcome! {{request.user}} </h1>
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Student Hub - Home</title>
+  <link rel="stylesheet" href="{% static 'base/home.css' %}">
+</head>
+<body>
+
+  <header class="navbar">
+    <h2>Student Hub</h2>
+    <a href="{% url 'create_post' %}" class="btn create-btn">+ Create Post</a>
+    <a href="{% url 'logout' %}" class="btn create-btn">logout</a>
+  </header>
+
+  <main class="container">
+    {% if posts %}
+      {% for post in posts %}
+        <div class="post-card">
+          <div class="post-header">
+            <strong>{{ post.author.username }}</strong>
+            <span class="date">{{ post.created_at|date:"M d, Y" }}</span>
+          </div>
+          <div class="post-content">
+            <p>{{ post.content }}</p>
+          </div>
+          <div class="post-footer">
+            <span>👍 {{ post.likes.count }} Likes</span>
+            <span>💬 {{ post.comments.count }} Comments</span>
+          </div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p class="no-posts">No posts yet. Be the first to create one!</p>
+    {% endif %}
+  </main>
+
+</body>
+</html>

@@ -1,0 +1,23 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Create a Post</title>
+  <link rel="stylesheet" href="{% static 'base/create_post.css' %}">
+</head>
+<body>
+  <header class="navbar">
+    <h2>New Post</h2>
+    <a href="{% url 'home' %}" class="btn back-btn">← Back</a>
+  </header>
+
+  <main class="container">
+    <form method="POST" class="post-form">
+      {% csrf_token %}
+      <textarea name="content" rows="5" placeholder="What's on your mind?" required></textarea>
+      <button type="submit" class="btn submit-btn">Post</button>
+    </form>
+  </main>
+</body>
+</html>
