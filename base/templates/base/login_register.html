@@ -1,0 +1,67 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>
+    {% if page == 'login' %}
+    Login
+    {% else %}
+    Register
+    {% endif %}
+     </title>
+  <link rel="stylesheet" href="{% static 'base/auth.css' %}">
+</head>
+<body>
+   
+  <div class="container">
+
+    <div class="forms">
+           {% if page == 'login' %}
+      <!-- Login Form -->
+      <form method="POST" action="" class="form login-form">
+        {% csrf_token %}
+        <h2>Login</h2>
+        <div class="input-box">
+          <input type="text" name="username" required>
+          <label>Username</label>
+        </div>
+        <div class="input-box">
+          <input type="password" name="password" required>
+          <label>Password</label>
+        </div>
+        <button type="submit" class="btn">Login</button>
+        <p>Don’t have an account? <a href="{% url 'register' %}" id="show-register">Register</a></p>
+      </form>
+    {% else %}
+      <!-- Register Form -->
+      <form method="POST" action="" class="form register-form ">
+        {% csrf_token %}
+        <h2>Register</h2>
+        <div class="input-box">
+          <input type="text" name="username" required >
+          <label>Username</label>
+        </div>
+        <div class="input-box">
+          <input type="email" name="email" required>
+          <label>Email</label>
+        </div>
+        <div class="input-box">
+          <input type="password" name="password1" required>
+          <label>Password</label>
+        </div>
+        <div class="input-box">
+          <input type="password" name="password2" required>
+          <label>Confirm Password</label>
+        </div>
+        <button type="submit" class="btn">Register</button>
+        <p>Already have an account? <a href="{% url 'login' %}" id="show-login">Login</a></p>
+      </form>
+      {% endif %}
+    </div>
+  </div>
+
+  
+</body>
+</html>
