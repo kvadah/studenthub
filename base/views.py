@@ -11,7 +11,13 @@ from .models import Post, Comment
 def home(request):
 
     posts = Post.objects.all().order_by('-created_at')
-    context = {'posts': posts}
+    post_id = request.GET.get('post_id')
+    selected_post = None
+    if post_id:
+        selected_post = Post.objects.get(id=post_id)
+    print(selected_post)
+   # comments = post.comments.all()
+    context = {'posts': posts, 'selected_post': selected_post, }
     return render(request, 'base/home.html', context)
 
 
@@ -85,3 +91,10 @@ def comment(request, pk):
 def logoutUser(request):
     logout(request)
     return redirect('home')
+
+
+def viewComments(request, pk):
+    post = Post.objects.get(id=pk)
+    comments = post.comments.all()
+    context = {'post': post, 'comments': comments}
+    return render(request, 'base/home.html', context)

@@ -8,39 +8,78 @@
 </head>
 <body>
 
+  <!-- Top Navbar -->
   <header class="navbar">
     <h2>Student Hub</h2>
-    <a href="{% url 'create_post' %}" class="btn create-btn">+ Create Post</a>
-    <a href="{% url 'logout' %}" class="btn create-btn">logout</a>
+    <div class="nav-actions">
+      <a href="{% url 'create_post' %}" class="btn create-btn">+ Create Post</a>
+      <a href="{% url 'logout' %}" class="btn logout-btn">Logout</a>
+    </div>
   </header>
 
-  <main class="container">
-    {% if posts %}
-      {% for post in posts %}
-        <div class="post-card">
-          <div class="post-header">
-            <strong>{{ post.author.username }}</strong>
-            <span class="date">{{ post.created_at|date:"M d, Y" }}</span>
-          </div>
-          <div class="post-content">
-            <p>{{ post.content }}</p>
-          </div>
-          <div class="post-footer">
-            <span>👍 {{ post.likes.count }} Likes</span>
-            <span>💬 {{ post.comments.count }} Comments</span>
-          </div>
-          <div>
-            <form method="POST" action="{% url 'comment' post.id %}">
-            {% csrf_token %}
-            <input type="text" name="content" placeholder="write a comment" >
-            <input type="submit">
+  <!-- Main Content -->
+  <main class="main-container" style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px; padding: 20px;">
+
+    <!-- Left: Posts list -->
+    <div class="posts-section">
+      {% if posts %}
+        {% for post in posts %}
+          <div class="post-card" style="background:#fff; border-radius:10px; padding:15px; margin-bottom:15px; box-shadow:0 2px 6px rgba(0,0,0,0.1);">
+            <div class="post-header" style="display:flex; justify-content:space-between;">
+              <strong>{{ post.author.username }}</strong>
+              <span class="date" style="color:#777;">{{ post.created_at|date:"M d, Y" }}</span>
+            </div>
+
+            <div class="post-content" style="margin-top:10px;">
+              <p>{{ post.content }}</p>
+            </div>
+
+            <div class="post-footer" style="margin-top:10px; display:flex; justify-content:space-between; color:#555;">
+              <span>👍 {{ post.likes.count }} Likes</span>
+              <a href="?post_id={{ post.id }}" style="text-decoration:none; color:dodgerblue;">💬 {{ post.comments.count }} Comments</a>
+            </div>
+
+            <!-- Quick comment form -->
+            <form method="POST" action="{% url 'comment' post.id %}" style="margin-top:10px;">
+              {% csrf_token %}
+              <input type="text" name="content" placeholder="Write a comment..." style="width:80%; padding:6px; border:1px solid #ccc; border-radius:5px;">
+              <button type="submit" style="padding:6px 10px; background:dodgerblue; color:white; border:none; border-radius:5px;">Send</button>
             </form>
-         </div>
-        </div>
-      {% endfor %}
-    {% else %}
-      <p class="no-posts">No posts yet. Be the first to create one!</p>
-    {% endif %}
+          </div>
+        {% endfor %}
+      {% else %}
+        <p class="no-posts" style="color:#555;">No posts yet. Be the first to create one!</p>
+      {% endif %}
+    </div>
+
+    <!-- Right: Comments panel -->
+    <div class="comments-section" style="background:#fafafa; padding:15px; border-radius:10px;">
+      {% if selected_post %}
+        <h3>Comments on {{ selected_post.author.username }}’s post</h3>
+        <p style="margin-top:10px; color:#444;">{{ selected_post.content }}</p>
+        <hr>
+
+        {% for comment in selected_post.comments.all %}
+          <div class="comment" style="margin-bottom:12px;">
+            <strong>{{ comment.author.username }}</strong>
+            <p style="margin:5px 0;">{{ comment.content }}</p>
+            <small style="color:#888;">{{ comment.created_at|timesince }} ago</small>
+          </div>
+        {% empty %}
+          <p>No comments yet.</p>
+        {% endfor %}
+
+        <!-- Add comment form -->
+        <form method="POST" action="{% url 'comment' selected_post.id %}" style="margin-top:15px;">
+          {% csrf_token %}
+          <textarea name="content" placeholder="Add a comment..." required style="width:100%; height:70px; border-radius:5px; border:1px solid #ccc; padding:8px;"></textarea>
+          <button type="submit" style="margin-top:8px; background:dodgerblue; color:white; border:none; padding:8px 12px; border-radius:5px;">Comment</button>
+        </form>
+      {% else %}
+        <p style="color:gray;">Select a post to see its comments.</p>
+      {% endif %}
+    </div>
+
   </main>
 
 </body>

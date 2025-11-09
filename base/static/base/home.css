@@ -33,6 +33,10 @@ body {
     margin: 2rem auto;
 }
 
+.home {
+    display: flex;
+}
+
 .post-card {
     background: white;
     padding: 1rem 1.5rem;

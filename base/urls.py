@@ -8,4 +8,5 @@ urlpatterns = [
     path('create-post/', views.createPost, name='create_post'),
     path('register/', views.register, name='register'),
     path('comment/<int:pk>/', views.comment, name='comment'),
+     path('view_comments/<int:pk>/', views.viewComments, name='view_comments'),
 ]
