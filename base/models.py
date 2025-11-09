@@ -38,7 +38,7 @@ class Reply(models.Model):
 class Like(models.Model):
     post = models.ForeignKey(
         Post, on_delete=models.CASCADE, related_name='likes')
-    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE,related_name='likes')
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

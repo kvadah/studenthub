@@ -35,7 +35,17 @@
             </div>
 
             <div class="post-footer" style="margin-top:10px; display:flex; justify-content:space-between; color:#555;">
-              <span>👍 {{ post.likes.count }} Likes</span>
+               <form method="POST" action="{% url 'like' post.id %}">
+                {% csrf_token %}
+                <button type="submit" style="background:none; border:none; cursor:pointer;">
+                  {% if post.is_liked %}
+                    ❤️ Unlike
+                  {% else %}
+                    🤍 Like
+                  {% endif %}
+                </button>
+                <span>{{ post.likes.count }} Likes</span>
+              </form>
               <a href="?post_id={{ post.id }}" style="text-decoration:none; color:dodgerblue;">💬 {{ post.comments.count }} Comments</a>
             </div>
 

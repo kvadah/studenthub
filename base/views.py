@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
-from .models import Post, Comment
+from .models import Post, Comment, Like
 # Create your views here.
 
 
@@ -12,6 +12,8 @@ def home(request):
 
     posts = Post.objects.all().order_by('-created_at')
     post_id = request.GET.get('post_id')
+    for post in posts:
+        post.is_liked = post.likes.filter(student=request.user.student_profile).exists()
     selected_post = None
     if post_id:
         selected_post = Post.objects.get(id=post_id)
@@ -98,3 +100,12 @@ def viewComments(request, pk):
     comments = post.comments.all()
     context = {'post': post, 'comments': comments}
     return render(request, 'base/home.html', context)
+
+
+def like(request, pk):
+    post = Post.objects.get(id=pk)
+    author = request.user.student_profile
+    like, created = Like.objects.get_or_create(post=post, student=author,)
+    if not created:
+        like.delete()
+    return redirect('home')
