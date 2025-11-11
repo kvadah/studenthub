@@ -4,16 +4,19 @@ from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from .models import Post, Comment, Like
+from django.db.models import Q
 # Create your views here.
 
 
 @login_required(login_url='login')
 def home(request):
-
-    posts = Post.objects.all().order_by('-created_at')
+    query = request.GET.get('q', '')
+    posts = Post.objects.filter(
+        Q(content__icontains=query) | Q(author__username__icontains=query)).order_by('-created_at')
     post_id = request.GET.get('post_id')
     for post in posts:
-        post.is_liked = post.likes.filter(student=request.user.student_profile).exists()
+        post.is_liked = post.likes.filter(
+            student=request.user.student_profile).exists()
     selected_post = None
     if post_id:
         selected_post = Post.objects.get(id=post_id)
